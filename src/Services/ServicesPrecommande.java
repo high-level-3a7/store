@@ -5,6 +5,7 @@
  */
 package Services;
 import models.precommande;
+
 import store.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,15 +21,15 @@ import java.util.logging.Level;
  *
  * @author user
  */
-public class ServicesPrecommande implements IService2<precommande> {
+public class ServicesPrecommande implements IService<precommande> {
     Connection cnx = DataSource.getInstance().getCnx();
      @Override
-     public void ajouter(precommande pr) {
+     public void ajouter(precommande t) {
          try {
             String requete = "INSERT INTO precommande (idpr,date) VALUES (?,?)";
             PreparedStatement pst = cnx.prepareStatement(requete);
-            pst.setInt(1, pr.getIdpr());
-            pst.setString(2, pr.getDate());
+            pst.setInt(1, t.getIdpr());
+            pst.setString(2, t.getDate());
              
             pst.executeUpdate();
             System.out.println("Precommande validée !");
@@ -39,11 +40,11 @@ public class ServicesPrecommande implements IService2<precommande> {
 }
 
      @Override
-    public void supprimer(precommande pr) {
+    public void supprimer(precommande t) {
           try {
             String requete = "DELETE FROM precommande WHERE id=?";
             PreparedStatement pst = cnx.prepareStatement(requete);
-            pst.setInt(1, pr.getId());
+            pst.setInt(1, t.getId());
             pst.executeUpdate();
             System.out.println("Precommande supprimée!");
 
@@ -54,10 +55,10 @@ public class ServicesPrecommande implements IService2<precommande> {
      
  
     @Override
-    public void modifier(precommande pr)  {
+    public void modifier(precommande t)  {
         try{
         Statement stm = cnx.createStatement();
-        String query = "UPDATE precommande SET  idpr= '"+pr.getIdpr()+"', date= '"+pr.getDate()+"' WHERE id='"+pr.getId()+"'";
+        String query = "UPDATE precommande SET  idpr= '"+t.getIdpr()+"', date= '"+t.getDate()+"' WHERE id='"+t.getId()+"'";
         stm.executeUpdate(query);
         System.out.println("precommande modifiée !");
     } catch (SQLException ex) {
@@ -87,20 +88,27 @@ public class ServicesPrecommande implements IService2<precommande> {
  
     
     public precommande getId(int id) throws SQLException {
-        precommande pr = null;
+        precommande t = null;
         String req = "SELECT * FROM precommande WHERE id= '" + id + "'";
         Statement stm = cnx.createStatement();
         ResultSet rs = stm.executeQuery(req);
         while (rs.next()) {
-            pr= new precommande(rs.getInt("idpr"), rs.getString("date"));
+            t= new precommande(rs.getInt("idpr"), rs.getString("date"));
         }
-        return pr;  
+        return t;  
     }
-   
-    @Override
-    public List<precommande> readAllEmployeessSortedByDate() {
 
-        List<precommande> pr = new ArrayList<>();
+ 
+
+   
+   
+    /**
+     *
+     * @return
+     */
+    public List<precommande> readAllprecommandeSortedByDate() {
+
+        List<precommande> t = new ArrayList<>();
         try {
             Statement stm= cnx.createStatement();
             ResultSet rs = stm.executeQuery("select id,idpr from precommande order by Date ");
@@ -111,12 +119,12 @@ public class ServicesPrecommande implements IService2<precommande> {
                 
                 
                 precommande prr = new precommande(id,idpr);
-                pr.add(prr);
+                t.add(prr);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return pr;
+        return t;
     }
   
 }

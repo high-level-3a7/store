@@ -34,6 +34,16 @@ public class produit {
         this.disponibilite = disponibilite;
     }
 
+    public produit() {
+       
+    }
+
+    public produit(int idpr) {
+              this.idpr = idpr;
+    }
+
+   
+
     public int getIdpr() {
         return idpr;
     }

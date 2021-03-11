@@ -20,6 +20,7 @@ public class Store {
 
     /**
      * @param args the command line arguments
+     * @throws java.sql.SQLException
      */
     public static void main(String[] args) throws SQLException {
         // TODO code application logic here
@@ -28,28 +29,29 @@ public class Store {
     ServicesPrecommande spr = new ServicesPrecommande();
        ServicesProduit p1 =new ServicesProduit();
        ServicesPrecommande pr1 =new ServicesPrecommande();
-       p1.ajouter(new produit("aa", 5, "jj"));
+      // p1.ajouter(new produit("aa", 5, "jj"));
        ServicesPrecommande pr3 =new ServicesPrecommande();
-       pr1.ajouter(new precommande(5,7,""));
+       //pr1.ajouter(new precommande(5,32,""));
          
-         precommande pr2 =new precommande(20, 1,"27/06/1999" );
-        pr1.ajouter(pr2);
+         precommande pr2 =new precommande(20, 32,"27/06/1999" );
+       // pr1.ajouter(pr2);
         // spr.supprimer(pr2);
          spr.afficher().forEach(System.out::println);
          
          
          
         produit p2 =new produit(27, "ll", 8, "zzkojjk");
-        //p1.ajouter(p2);
+       // p1.ajouter(p2);
        // sp.supprimer(p2);
-       //sp.afficher().forEach(System.out::println);
+       sp.afficher().forEach(System.out::println);
     
       //spr.modifier(pr2);
      // pr3.modifier(pr2);
     //  p1.modifier(p2);
     //pr2.getId();
-   //System.out.println(spr.getId(20));
- //spr.readAllEmployeessSortedByDate().forEach(System.out::println);
-  //sp.readAllEmployeessSortedByPrix().forEach(System.out::println);
+   System.out.println(spr.getId(32));
+
+ //spr.readAllprecommandeSortedByDate().forEach(System.out::println);
+  //sp.readAllproduitSortedByPrix().forEach(System.out::println);
     }
 }

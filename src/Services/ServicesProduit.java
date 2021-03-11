@@ -27,13 +27,13 @@ public class ServicesProduit implements IService<produit> {
     Connection cnx = DataSource.getInstance().getCnx();
 
     @Override
-    public void ajouter(produit p) {
+    public void ajouter(produit t) {
          try {
             String requete = "INSERT INTO produit (nom,prix,disponibilite) VALUES (?,?,?)";
             PreparedStatement pst = cnx.prepareStatement(requete);
-            pst.setString(1, p.getNom());
-            pst.setFloat(2, p.getPrix());
-             pst.setString(3, p.getDisponibilite());
+            pst.setString(1, t.getNom());
+            pst.setFloat(2, t.getPrix());
+             pst.setString(3, t.getDisponibilite());
             pst.executeUpdate();
             System.out.println("Produit ajoutée !");
 
@@ -43,11 +43,11 @@ public class ServicesProduit implements IService<produit> {
     }
 
    @Override
-    public void supprimer(produit p) {
+    public void supprimer(produit t) {
           try {
-            String requete = "DELETE FROM produit WHERE id=?";
+            String requete = "DELETE FROM produit WHERE idpr=?";
             PreparedStatement pst = cnx.prepareStatement(requete);
-            pst.setInt(1, p.getIdpr());
+            pst.setInt(1, t.getIdpr());
             pst.executeUpdate();
             System.out.println("Produit supprimé!");
 
@@ -58,10 +58,10 @@ public class ServicesProduit implements IService<produit> {
 
  
     @Override
-    public void modifier(produit p)  {
+    public void modifier(produit t)  {
         try{
         Statement stm = cnx.createStatement();
-        String query = "UPDATE produit SET  nom= '"+p.getNom()+"', prix= '"+p.getPrix()+"', disponibilite= '"+p.getDisponibilite()+"' WHERE idpr='"+p.getIdpr()+"'";
+        String query = "UPDATE produit SET  nom= '"+t.getNom()+"', prix= '"+t.getPrix()+"', disponibilite= '"+t.getDisponibilite()+"' WHERE idpr='"+t.getIdpr()+"'";
         stm.executeUpdate(query);
         System.out.println("produit modifiée !");
     } catch (SQLException ex) {
@@ -87,7 +87,7 @@ public class ServicesProduit implements IService<produit> {
 
         return list;
     }
-      public produit getIdpr(int idpr) throws SQLException {
+    /*  public produit getIdpr(int idpr) throws SQLException {
         produit p = null;
         String req = "SELECT * FROM produit WHERE idpr= '" + idpr + "'";
         Statement stm = cnx.createStatement();
@@ -96,12 +96,46 @@ public class ServicesProduit implements IService<produit> {
             p= new produit(rs.getString("nom"), rs.getFloat("prix"), rs.getString("disponibilite"));
         }
         return p;  
+    }*/
+    public List<produit> Search(String charac) {
+           String requete="select * from produit where idpr LIKE '%"+charac+"%'or nom LIKE '%"+charac+"%' or prix LIKE '%"+charac+"%' or disponibilite LIKE '%"+charac+"%" ;
+           
+           List<produit> produit = new ArrayList<>();
+        try {
+            Statement stm=cnx.createStatement();
+            ResultSet rst=stm.executeQuery(requete);           
+     while(rst.next()) 
+    {       
+        //System.out.println("Event : "+rst.getString("description")+"\tMedia :"+rst.getString("source")+"\tNombre de J'aime :"+rst.getInt("nbrlikes") );
+ 
+            produit result = new produit();
+            result.setIdpr(rst.getInt("idpr"));
+            result.setNom(rst.getString("nom"));
+            result.setPrix(rst.getFloat("prix"));
+           result.setDisponibilite(rst.getString("disponibilite"));
+            
+            
+         
+            produit.add(result);
+          
     }
-   
-    @Override
-    public List<produit> readAllEmployeessSortedByPrix() {
+        } catch (SQLException ex) {
+            System.out.println("No produit Available !");
+        } 
+        return produit;   
+    }
 
-        List<produit> p = new ArrayList<>();
+   
+    
+   
+   
+    /**
+     *
+     * @return
+     */
+    public List<produit> readAllproduitSortedByPrix() {
+
+        List<produit> t = new ArrayList<>();
         try {
             Statement stm= cnx.createStatement();
             ResultSet rs = stm.executeQuery("select idpr, nom ,disponibilite from produit order by Prix ");
@@ -113,12 +147,12 @@ public class ServicesProduit implements IService<produit> {
                 
                 
                 produit pp = new produit(idpr,nom,disponibilite);
-                p.add(pp);
+                t.add(pp);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return p;
+        return t;
     }
   
     }
